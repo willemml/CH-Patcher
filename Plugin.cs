@@ -13,41 +13,61 @@ public static class Patcher
         logger.LogInfo(text);
     }
 
+	public static void publicize(TypeDefinition type) {
+		foreach (FieldDefinition field in type.Fields) {
+            field.IsPrivate = false;
+            field.IsPublic = true;
+					}
+					foreach (MethodDefinition method in type.Methods) {
+						method.IsPrivate = false;
+						method.IsPublic = true;
+					}
+	}
+
     // Patches the assemblies
     public static void Patch(AssemblyDefinition assembly)
     {
         log("Loading assembly module...");
         var mainModule = assembly.MainModule;
         TypeDefinition songEntry = null;
+		TypeDefinition encryptedSong = null;
         foreach (TypeDefinition type in mainModule.Types)
         {
             if (type.Name == "SongEntry")
             {
                 songEntry = type;
-            }
+            } else if (type.Name == "ʺʻʻˁˀʹʿʲʻʴʿ") {
+				encryptedSong = type;
+			}
         }
 
-        if (songEntry == null) {
+        if (songEntry == null)
+        {
             log("Failed to get SongEntry");
             return;
         }
         log("Loaded SongEntry type.");
 
+		publicize(songEntry);
+		publicize(encryptedSong);
+		
         MethodDefinition writeIni = null;
         foreach (MethodDefinition method in songEntry.Methods)
         {
             if (method.Name == "ʷʲʿʾʷʿʽʽʷʴʷ")
             {
                 writeIni = method;
+				break;
             }
         }
 
-        if (writeIni == null) {
+        if (writeIni == null)
+        {
             log("Failed to get writeIni method.");
             return;
-        } 
+        }
         log("Loaded writeIni method.");
-        
+
         var processor = writeIni.Body.GetILProcessor();
 
 
@@ -62,14 +82,17 @@ public static class Patcher
 
         Instruction prev = null;
 
-        for (int i = 0; i < writeIni.Body.Instructions.Count; i++) {
-            if (codes[i].Offset >= start && codes[i].Offset <= end) {
-              prev = codes[i].Previous;
-              break;
+        for (int i = 0; i < writeIni.Body.Instructions.Count; i++)
+        {
+            if (codes[i].Offset >= start && codes[i].Offset <= end)
+            {
+                prev = codes[i].Previous;
+                break;
             }
         }
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             processor.Remove(prev.Next);
         }
 

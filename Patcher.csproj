@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net35</TargetFramework>
-    <AssemblyName>WriteINIPatch</AssemblyName>
-    <Description>My first plugin</Description>
-    <Version>1.0.0</Version>
+    <AssemblyName>Patcher</AssemblyName>
+    <Description>Clone Hero mod that patches and publicizes various methods (for use with CH-Decryptor)</Description>
+    <Version>0.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
