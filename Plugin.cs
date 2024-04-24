@@ -2,9 +2,9 @@
 using Mono.Cecil.Cil;
 using System.Collections.Generic;
 
-public static class Patcher
+public static class DPatcher
 {
-    public static BepInEx.Logging.ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("WriteIniPatch");
+    public static BepInEx.Logging.ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("Patcher");
     // List of assemblies to patch
     public static IEnumerable<string> TargetDLLs { get; } = new[] { "Assembly-CSharp.dll" };
 
